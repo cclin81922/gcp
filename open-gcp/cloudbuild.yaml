@@ -1,0 +1,21 @@
+steps:
+- name: 'gcr.io/cloud-builders/gsutil'
+  args:
+  - '-h'
+  - 'Cache-Control:no-cache, max-age=0'
+  - 'cp'
+  - 'open-gcp/index.html'
+  - 'gs://opengcp.mrcclin.com/index.html'
+- name: 'gcr.io/cloud-builders/gsutil'
+  args:
+  - 'cp'
+  - '-r'
+  - 'open-gcp/firebase-hosting/*'
+  - '.'
+- name: 'gcr.io/cloud-builders/gsutil'
+  args:
+  - 'cp'
+  - 'open-gcp/index.html'
+  - 'public/index.html'
+- name: 'gcr.io/gcp-expert-sandbox-jim/firebase'
+  args: [ 'deploy', '--project', 'gcp-expert-sandbox-jim', '--only', 'hosting:gcp-expert-sandbox-jim']
