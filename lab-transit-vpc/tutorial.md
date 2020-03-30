@@ -257,6 +257,12 @@ At this point, these are the only IP addresses that have access to the cluster m
 * The primary range of transitive-subnet-gke. (192.168.16.0/20)
 * The secondary range used for Pods. (192.168.32.0/20)
 
+NOTE
+
+* Master address range mask size must be /28
+* Pod address range mask size must be /9 ~ /21
+* Service address range mask size must be /16 ~ /27
+
 ### Exchange Custom Route
 
 ```bash
