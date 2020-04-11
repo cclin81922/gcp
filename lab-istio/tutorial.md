@@ -118,33 +118,67 @@ istioctl manifest generate --set profile=minimal | istioctl verify-install -f -
 
 ### Single Namespace
 
+```bash
+kubens default
+```
+
 deploy sample application
 
 ```bash
-kubectl run
+kubectl run server --image=gcr.io/google-samples/hello-app:1.0 --replicas=2
 ```
 ```bash
-kubectl run
+kubectl expose deploy/server --port 80 --target-port 8080
 ```
 ```bash
-kubectl expose
+kubectl run client --image=gcr.io/gcp-expert-sandbox-jim/debian -- /bin/bash -c 'while true; do sleep 1; curl -s server; done'
 ```
 
-check log
+check client logs
+
 ```bash
-kubectl logs
+pod=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
+```
+```bash
+kubectl logs $pod -c client
 ```
 
 deploy traffic management
 
+
+```vs.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: server
+spec:
+  hosts:
+  - server
+  http:
+  - route:
+    - destination:
+        host: server
+```
+```dr.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: server
+spec:
+  host: server.default.svc.cluster.local
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        useSourceIp: true
+```
 ```bash
-kubectl apply
+kubectl apply -f dr.yaml
+```
+```bash
+kubectl apply -f vs.yaml
 ```
 
-check log
-```bash
-kubectl logs
-```
+check client logs again
 
 ### Multiple Namespaces
 
