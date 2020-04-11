@@ -111,13 +111,42 @@ kubectl label namespace default istio-injection=enabled
 verify
 
 ```bash
-istioctl manifest generate --set profile=minimal > minimal.yaml
-```
-```bash
-istioctl verify-install -f minimal.yaml
+istioctl manifest generate --set profile=minimal | istioctl verify-install -f -
 ```
 
 ## Demo Destination Rule
+
+### Single Namespace
+
+deploy sample application
+
+```bash
+kubectl run
+```
+```bash
+kubectl run
+```
+```bash
+kubectl expose
+```
+
+check log
+```bash
+kubectl logs
+```
+
+deploy traffic management
+
+```bash
+kubectl apply
+```
+
+check log
+```bash
+kubectl logs
+```
+
+### Multiple Namespaces
 
 ## Demo Virtual Service
 
