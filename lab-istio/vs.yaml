@@ -8,4 +8,4 @@ spec:
   http:
   - route:
     - destination:
-        host: server
+        host: server # interpreted as server.default.svc.cluster.local
