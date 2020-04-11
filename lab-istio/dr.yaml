@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: server
+  name: dest-server
 spec:
   host: server.default.svc.cluster.local
   trafficPolicy:

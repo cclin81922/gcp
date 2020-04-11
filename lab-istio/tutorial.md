@@ -131,7 +131,7 @@ kubectl run server --image=gcr.io/google-samples/hello-app:1.0 --replicas=2
 kubectl expose deploy/server --port 80 --target-port 8080
 ```
 ```bash
-kubectl run client --image=gcr.io/gcp-expert-sandbox-jim/debian -- /bin/bash -c 'while true; do sleep 1; curl -s server; done'
+kubectl run client --image=gcr.io/gcp-expert-sandbox-jim/debian -- /bin/bash -c 'while true; do sleep 1; date; curl -s server; done'
 ```
 
 check client logs
@@ -146,31 +146,6 @@ kubectl logs $pod -c client
 deploy traffic management
 
 
-```vs.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: server
-spec:
-  hosts:
-  - server
-  http:
-  - route:
-    - destination:
-        host: server
-```
-```dr.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: server
-spec:
-  host: server.default.svc.cluster.local
-  trafficPolicy:
-    loadBalancer:
-      consistentHash:
-        useSourceIp: true
-```
 ```bash
 kubectl apply -f dr.yaml
 ```
