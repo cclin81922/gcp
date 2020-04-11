@@ -68,7 +68,8 @@ gcloud container clusters create {{gke-cluster}} \
   --cluster-version {{gke-version}} \
   --machine-type=n1-standard-2 \
   --num-nodes 4 \
-  --enable-network-policy
+  --enable-network-policy \
+  --zone $(gcloud config get-value compute/zone)
 ```
 ```bash
 kubectl create clusterrolebinding cluster-admin-binding \
@@ -105,6 +106,15 @@ instruct Istio to automatically inject Envoy sidecar proxies
 
 ```bash
 kubectl label namespace default istio-injection=enabled
+```
+
+verify
+
+```bash
+istioctl manifest generate --set profile=minimal > minimal.yaml
+```
+```bash
+istioctl verify-install -f minimal.yaml
 ```
 
 ## Demo Destination Rule
