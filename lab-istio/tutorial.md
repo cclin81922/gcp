@@ -154,7 +154,7 @@ deploy traffic management
 * dr export to all
 
 ```bash
-kubectl apply -f dr.yaml
+kubectl apply -f demo-dr/dr.yaml
 ```
 
 check client logs again
@@ -163,13 +163,13 @@ SHOULD BE: sticky one
 
 NOTE: if not sticky one, fix by either
 1. re-deploy client
-2. deploy vs.yaml
+2. deploy demo-dr/vs.yaml
 
 
 delete traffic management
 
 ```bash
-kubectl delete -f dr.yaml
+kubectl delete -f demo-dr/dr.yaml
 ```
 
 check client logs again
@@ -181,6 +181,72 @@ SHOULD BE: round robin
 [dr lookup path](https://istio.io/docs/ops/best-practices/traffic-management/#cross-namespace-configuration)
 
 ## Demo Virtual Service
+
+### Single Namespace
+
+```bash
+kubens default
+```
+
+deploy sample application
+
+* client in default namespace
+* server-1 in default namespace
+* server-2 in default namespace
+
+```bash
+kubectl run server-1 --image=gcr.io/google-samples/hello-app:1.0 --replicas=1
+```
+```bash
+kubectl expose deploy/server-1 --port 80 --target-port 8080
+```
+```bash
+kubectl run server-2 --image=gcr.io/google-samples/hello-app:1.0 --replicas=1
+```
+```bash
+kubectl expose deploy/server-2 --port 80 --target-port 8080
+```
+```bash
+kubectl run client --image=gcr.io/gcp-expert-sandbox-jim/debian -- /bin/bash -c 'while true; do sleep 1; date; curl -s server-1; done'
+```
+
+check client logs
+
+```bash
+pod=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
+```
+```bash
+kubectl logs $pod -c client
+```
+
+SHOULD BE: server-1 pod
+
+deploy traffic management
+
+* vs in default namespace
+* vs export to all
+
+```bash
+kubectl apply -f demo-vs/vs.yaml
+```
+
+check client logs again
+
+SHOULD BE: server-2 pod
+
+deleted traffic management
+
+```bash
+kubectl delete -f demo-vs/vs.yaml
+```
+
+check client logs again
+
+SHOULD BE: server-1 pod
+
+### Multiple Namespaces
+
+vs lookup path?
 
 ## Demo Service Entry
 
