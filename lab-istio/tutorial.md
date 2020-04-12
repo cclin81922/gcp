@@ -166,6 +166,8 @@ NOTE: if not sticky one, fix by either
 2. deploy vs.yaml
 
 
+delete traffic management
+
 ```bash
 kubectl delete -f dr.yaml
 ```
