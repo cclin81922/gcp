@@ -59,7 +59,7 @@ n/a
 
 ## Create GKE Cluster
 
-(doc)[https://istio.io/docs/setup/platform-setup/gke/]
+[doc](https://istio.io/docs/setup/platform-setup/gke/)
 
 use the {{gke-version}} version
 
@@ -177,6 +177,8 @@ check client logs again
 SHOULD BE: round robin
 
 ### Multiple Namespaces
+
+[dr lookup path](https://istio.io/docs/ops/best-practices/traffic-management/#cross-namespace-configuration)
 
 ## Demo Virtual Service
 
