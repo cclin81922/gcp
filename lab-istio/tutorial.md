@@ -161,7 +161,10 @@ check client logs again
 
 SHOULD BE: sticky one
 
-NOTE: if not sticky one, delete then re-deploy client
+NOTE: if not sticky one, fix by either
+1. re-deploy client
+2. deploy vs.yaml
+
 
 ```bash
 kubectl delete -f dr.yaml
