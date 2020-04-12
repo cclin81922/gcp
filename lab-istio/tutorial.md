@@ -251,6 +251,58 @@ vs lookup path?
 
 ## Demo Service Entry
 
+### Single Namespaces
+
+```bash
+kubens default
+```
+
+deploy sample application
+
+* client in default namespace
+
+```bash
+kubectl run client --image=gcr.io/gcp-expert-sandbox-jim/debian -- /bin/bash -c 'while true; do sleep 1; date; curl -s https://httpbin.org/get; done'
+```
+
+check client logs
+
+```bash
+pod=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
+```
+```bash
+kubectl logs $pod -c client
+```
+
+SHOULD BE: ok (Why?)
+
+deploy traffic management
+
+* se in default namespace
+* se export to all
+* se in external location
+
+```bash
+kubectl apply -f demo-se/se.yaml
+```
+
+check client logs again
+
+SHOULD BE: ?
+
+deleted traffic management
+
+```bash
+kubectl delete -f demo-se/se.yaml
+```
+
+check client logs again
+
+SHOULD BE: ?
+
+
+### Multiple Namespaces
+
 ## Demo Gateway
 
 ## Clean Up
