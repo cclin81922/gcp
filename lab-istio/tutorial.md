@@ -165,7 +165,6 @@ NOTE: if not sticky one, fix by either
 1. re-deploy client
 2. deploy demo-dr/vs.yaml
 
-
 delete traffic management
 
 ```bash
@@ -274,7 +273,22 @@ pod=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
 kubectl logs $pod -c client
 ```
 
-SHOULD BE: ok (Why?)
+SHOULD BE: ok
+
+because [global.outboundTrafficPolicy.mode=ALLOW_ANY](https://istio.io/docs/tasks/traffic-management/egress/egress-control/#envoy-passthrough-to-external-services)
+
+re-deploy istio
+
+```bash
+istioctl manifest generate --set profile={{istio-profile}} | kubectl delete -f -
+```
+```bash
+istioctl manifest apply --set profile={{istio-profile}} --set values.global.outboundTrafficPolicy.mode=REGISTRY_ONLY
+```
+
+check client logs again
+
+SHOULD BE: nothing
 
 deploy traffic management
 
@@ -288,7 +302,7 @@ kubectl apply -f demo-se/se.yaml
 
 check client logs again
 
-SHOULD BE: ?
+SHOULD BE: ok
 
 deleted traffic management
 
@@ -298,8 +312,7 @@ kubectl delete -f demo-se/se.yaml
 
 check client logs again
 
-SHOULD BE: ?
-
+SHOULD BE: nothing
 
 ### Multiple Namespaces
 
