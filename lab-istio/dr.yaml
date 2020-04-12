@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: dest-server
 spec:
-  host: server.default.svc.cluster.local
+  host: server # interpreted as server.default.svc.cluster.local 
   trafficPolicy:
     loadBalancer:
       consistentHash:

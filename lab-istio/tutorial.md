@@ -124,6 +124,9 @@ kubens default
 
 deploy sample application
 
+* client in default namespace
+* server in default namespace
+
 ```bash
 kubectl run server --image=gcr.io/google-samples/hello-app:1.0 --replicas=2
 ```
@@ -143,17 +146,30 @@ pod=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
 kubectl logs $pod -c client
 ```
 
+SHOULD BE: round robin
+
 deploy traffic management
 
+* dr in default namespace
+* dr export to all
 
 ```bash
 kubectl apply -f dr.yaml
 ```
+
+check client logs again
+
+SHOULD BE: sticky one
+
+NOTE: if not sticky one, delete then re-deploy client
+
 ```bash
-kubectl apply -f vs.yaml
+kubectl delete -f dr.yaml
 ```
 
 check client logs again
+
+SHOULD BE: round robin
 
 ### Multiple Namespaces
 
