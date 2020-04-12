@@ -225,6 +225,7 @@ deploy traffic management
 
 * vs in default namespace
 * vs export to all
+* vs bound to mesh gateway
 
 ```bash
 kubectl apply -f demo-vs/vs.yaml
