@@ -102,6 +102,11 @@ install the {{istio-profile}} profile
 istioctl manifest apply --set profile={{istio-profile}}
 ```
 
+NOTE (useful options)
+
+* --set values.global.proxy.accessLogFile="/dev/stdout" [doc](https://istio.io/docs/tasks/observability/logs/access-log/)
+* ...
+
 instruct Istio to automatically inject Envoy sidecar proxies
 
 ```bash
