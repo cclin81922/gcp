@@ -323,6 +323,14 @@ SHOULD BE: nothing
 
 ## Demo Gateway
 
+### Single Namespace (e)
+
+### Single Namespace (i)
+
+### Multiple Namespaces (e)
+
+### Multiple Namespaces (i)
+
 ## Clean Up
 
 ```bash
