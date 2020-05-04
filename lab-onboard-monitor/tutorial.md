@@ -70,6 +70,31 @@ terraform plan
 terraform apply
 ```
 
+## Test Alerting
+
+### Test 1
+
+```bash
+gcloud compute instances create new-vm-01
+```
+
+### Test 2
+
+```bash
+gcloud compute ssh new-vm-01 -- fallocate -l 1G 1.0G.img
+```
+```bash
+gcloud compute scp new-vm-01:~/1.0G.img .
+```
+
+### Test 3
+
+```
+# data size = 1.76 GB
+
+bq query --nouse_legacy_sql --nouse_cache 'SELECT * FROM `bigquery-public-data`.baseball.games_wide'
+```
+
 ## Clean Up
 
 ```bash
