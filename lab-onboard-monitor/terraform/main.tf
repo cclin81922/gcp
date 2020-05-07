@@ -81,3 +81,37 @@ resource "google_monitoring_alert_policy" "gce_new_instance_warning" {
     google_monitoring_notification_channel.sre_team_channel.id
   ]
 }
+
+resource "google_logging_metric" "project_enable_service_metric" {
+  name   = "user/project/service/enable"
+  filter = format("resource.type=\"audited_resource\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Factivity\" AND protoPayload.methodName=(\"google.api.serviceusage.v1beta1.ServiceUsage.EnableService\" OR \"google.api.serviceusage.v1.ServiceUsage.EnableService\") AND operation.last=true severity=\"NOTICE\"", var.gcp_project)
+  metric_descriptor {
+    metric_kind = "DELTA"
+    value_type  = "INT64"
+  }
+}
+
+resource "google_monitoring_alert_policy" "project_enable_service_warning" {
+  display_name = "PROJECT enable service event"
+  combiner     = "OR"
+  conditions {
+    display_name = "PROJECT enable service event"
+    condition_threshold {
+      filter     = format("metric.type=\"logging.googleapis.com/user/%s\" resource.type=\"audited_resource\"", google_logging_metric.project_enable_service_metric.name)
+      duration   = "60s"
+      comparison = "COMPARISON_GT"
+      aggregations {
+        alignment_period   = "60s"
+        per_series_aligner = "ALIGN_COUNT"
+      }
+      threshold_value = 0.0
+      trigger {
+        count = 1
+      }
+    }
+  }
+
+  notification_channels = [
+    google_monitoring_notification_channel.sre_team_channel.id
+  ]
+}
