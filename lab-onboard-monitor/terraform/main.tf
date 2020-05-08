@@ -82,22 +82,22 @@ resource "google_monitoring_alert_policy" "gce_new_instance_warning" {
   ]
 }
 
-resource "google_logging_metric" "project_enable_service_metric" {
-  name   = "user/project/service/enable"
-  filter = format("resource.type=\"audited_resource\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Factivity\" AND protoPayload.methodName=(\"google.api.serviceusage.v1beta1.ServiceUsage.EnableService\" OR \"google.api.serviceusage.v1.ServiceUsage.EnableService\") AND operation.last=true severity=\"NOTICE\"", var.gcp_project)
+resource "google_logging_metric" "project_activate_service_metric" {
+  name   = "user/project/service/activate"
+  filter = format("resource.type=\"audited_resource\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Factivity\" AND protoPayload.methodName=(\"google.api.servicemanagement.v1beta1.ServiceManager.ActivateServices\" OR \"google.api.servicemanagement.v1.ServiceManager.ActivateServices\") AND operation.last=true severity=\"NOTICE\"", var.gcp_project)
   metric_descriptor {
     metric_kind = "DELTA"
     value_type  = "INT64"
   }
 }
 
-resource "google_monitoring_alert_policy" "project_enable_service_warning" {
-  display_name = "PROJECT enable service event"
+resource "google_monitoring_alert_policy" "project_activate_service_warning" {
+  display_name = "PROJECT activate service event"
   combiner     = "OR"
   conditions {
-    display_name = "PROJECT enable service event"
+    display_name = "PROJECT activate service event"
     condition_threshold {
-      filter     = format("metric.type=\"logging.googleapis.com/user/%s\" resource.type=\"audited_resource\"", google_logging_metric.project_enable_service_metric.name)
+      filter     = format("metric.type=\"logging.googleapis.com/user/%s\" resource.type=\"audited_resource\"", google_logging_metric.project_activate_service_metric.name)
       duration   = "60s"
       comparison = "COMPARISON_GT"
       aggregations {
