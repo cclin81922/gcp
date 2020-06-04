@@ -1,6 +1,13 @@
+data "google_project" "project" {
+}
+
+data "google_monitoring_notification_channel" "channel" {
+  display_name = "SRE Team"
+}
+
 resource "google_logging_metric" "iam_set_policy_metric" {
   name   = "user/iam/policy/set"
-  filter = format("resource.type=\"project\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Factivity\" AND protoPayload.methodName=\"SetIamPolicy\" AND severity=\"NOTICE\"", var.gcp_project)
+  filter = format("resource.type=\"project\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Factivity\" AND protoPayload.methodName=\"SetIamPolicy\" AND severity=\"NOTICE\"", data.google_project.project.id)
   metric_descriptor {
     metric_kind = "DELTA"
     value_type  = "INT64"
@@ -28,6 +35,10 @@ resource "google_monitoring_alert_policy" "iam_set_policy_warning" {
   }
 
   notification_channels = [
-    google_monitoring_notification_channel.sre_team_channel.id
+    data.google_monitoring_notification_channel.channel.id
+  ]
+
+  depends_on = [
+    google_logging_metric.iam_set_policy_metric
   ]
 }

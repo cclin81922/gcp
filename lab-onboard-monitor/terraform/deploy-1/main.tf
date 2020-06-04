@@ -55,6 +55,11 @@ resource "google_monitoring_alert_policy" "gce_new_instance_warning" {
   notification_channels = [
     google_monitoring_notification_channel.sre_team_channel.id
   ]
+
+  depends_on = [
+    google_logging_metric.gce_new_instance_metric,
+    google_monitoring_notification_channel.sre_team_channel
+  ]
 }
 
 resource "google_logging_metric" "project_activate_service_metric" {
@@ -88,5 +93,10 @@ resource "google_monitoring_alert_policy" "project_activate_service_warning" {
 
   notification_channels = [
     google_monitoring_notification_channel.sre_team_channel.id
+  ]
+
+  depends_on = [
+    google_logging_metric.project_activate_service_metric,
+    google_monitoring_notification_channel.sre_team_channel
   ]
 }

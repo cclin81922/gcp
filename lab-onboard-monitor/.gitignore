@@ -1,0 +1,9 @@
+terraform-dev/
+
+terraform/deploy-1/.terraform/
+terraform/deploy-1/terraform.tfstate
+terraform/deploy-1/terraform.tfstate.backup
+
+terraform/deploy-2/.terraform/
+terraform/deploy-2/terraform.tfstate
+terraform/deploy-2/terraform.tfstate.backup

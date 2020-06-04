@@ -1,3 +1,10 @@
+data "google_project" "project" {
+}
+
+data "google_monitoring_notification_channel" "channel" {
+  display_name = "SRE Team"
+}
+
 resource "google_monitoring_alert_policy" "bq_scanned_bytes_billed_warning" {
   display_name = "BQ scanned bytes billed over 512 MiB in 10 minutes"
   combiner     = "OR"
@@ -19,13 +26,13 @@ resource "google_monitoring_alert_policy" "bq_scanned_bytes_billed_warning" {
   }
 
   notification_channels = [
-    google_monitoring_notification_channel.sre_team_channel.id
+    data.google_monitoring_notification_channel.channel.id
   ]
 }
 
 resource "google_logging_metric" "bq_bigdata_query_metric" {
   name   = "user/bq/query/bigdata"
-  filter = format("resource.type=\"bigquery_resource\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Fdata_access\" AND protoPayload.methodName=\"jobservice.jobcompleted\" AND severity=\"INFO\" AND protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.totalBilledBytes>1073741824", var.gcp_project)
+  filter = format("resource.type=\"bigquery_resource\" AND logName=\"projects/%s/logs/cloudaudit.googleapis.com%%2Fdata_access\" AND protoPayload.methodName=\"jobservice.jobcompleted\" AND severity=\"INFO\" AND protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.totalBilledBytes>1073741824", data.google_project.project.id)
   metric_descriptor {
     metric_kind = "DELTA"
     value_type  = "INT64"
@@ -53,6 +60,10 @@ resource "google_monitoring_alert_policy" "bq_bigdata_query_warning" {
   }
 
   notification_channels = [
-    google_monitoring_notification_channel.sre_team_channel.id
+    data.google_monitoring_notification_channel.channel.id
+  ]
+
+  depends_on = [
+    google_logging_metric.bq_bigdata_query_metric
   ]
 }
