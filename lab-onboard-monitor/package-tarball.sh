@@ -10,4 +10,4 @@ rm -rf terraform/deploy-2/.terraform/
 rm -rf terraform/deploy-2/terraform.tfstate
 rm -rf terraform/deploy-2/terraform.tfstate.backup
 
-tar -czf terraform.tar.gz terraform
+tar -czf terraform.tar.gz terraform batch-apply.sh batch-destroy.sh
