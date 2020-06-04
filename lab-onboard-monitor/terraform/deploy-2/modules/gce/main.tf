@@ -6,7 +6,7 @@ data "google_monitoring_notification_channel" "channel" {
 }
 
 resource "google_monitoring_alert_policy" "vm_egress_bytes_billed_warning" {
-  display_name = "VM egress bytes billed over 512 MiB in 10 minutes"
+  display_name = "GCE vm egress bytes billed over 512 MiB in 10 minutes"
   combiner     = "OR"
   conditions {
     display_name = "VM egress bytes billed over 512 MiB in 10 minutes"

@@ -40,7 +40,7 @@ resource "google_logging_metric" "bq_bigdata_query_metric" {
 }
 
 resource "google_monitoring_alert_policy" "bq_bigdata_query_warning" {
-  display_name = "BQ bigdata query event"
+  display_name = "BQ over 1 GiB query event"
   combiner     = "OR"
   conditions {
     display_name = "BQ bigdata query event"
