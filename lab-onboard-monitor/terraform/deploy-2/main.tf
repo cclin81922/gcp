@@ -9,3 +9,7 @@ module "iam" {
 module "vpc" {
   source = "./modules/vpc"
 }
+
+module "gce" {
+  source = "./modules/gce"
+}
